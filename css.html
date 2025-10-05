@@ -1,0 +1,74 @@
+<?php
+include 'db-connect.php';
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Fashion Store Inventory</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <header>
+            <h1>Fashion Store Inventory</h1>
+        </header>
+
+        <nav>
+            <a href="index.html">store</a>|<a href="inventory.php">Inventory</a>
+        </nav>
+        <div class="container">
+            <h2>Inventory Summary</h2>
+
+            <table>
+                <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Bought</th>
+                    <th>Sold></th>
+                    <th>In stock</th>
+                    <th>Total sale</th>
+                    <th>Update Sold</th>
+                </tr>
+                <?php
+                $sql="SELECT id, name, price,bought,sold FROM products";
+                $result=$conn->query($sql);
+                $grandtotal=0.00;
+                if ($result && &result->num_rows > 0){while ($row = $result->fetch_assoc()){
+                    $stock = (int)$row['bought'] - (int)
+                    $row['sold'];
+                              $sales= $row['sold']*$row['price'];
+                              $grandTotal += $sales;
+                              echo "<tr>
+                                <td>{$row['name']}</td>
+                                <td>$"number_format($row['price'],2."</td>
+                                <td>{$row['bought']}</td>
+                                <td>{$row['sold']}</td>
+                                <td>{$stock}</td>
+                                <td>$" .number_format($sales,2) ."</td>
+                                <td>
+                                    <form method='post' action='update_stock.php'
+                                    style='display:inline-block;'>
+                                    <input type='hidden' name='id' value='{$row['id']}'>
+                                    <input type='number' name='solid' value='1' min='1' style='width:60px'>
+                                    <button type='submit'>Record Sale</button>
+                                </form>
+                                </td>
+                              </tr> ;
+                            }
+                }else{
+                    echo"<tr><td colspan='7'>No products found.</td></tr>";
+                }
+                ?>
+                <tr>
+                    <th colspan="5">Total store revenue</th>
+                    <th colspan="2">$<?php echo number_format($grandTotal,2); ?></th>
+                </tr>
+            </table>
+        </div>
+
+        <footer>
+            <p>@ 2025 Fashion Store | All Rights Reserved</p>
+        </footer>
+    </body>
+</html>
+<?php $conn->close(); ?>
